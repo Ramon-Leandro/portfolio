@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Ramon Leandro | Backend Developer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --bg: #050816;
+      --card: rgba(15, 23, 42, 0.75);
+      --border: rgba(255,255,255,0.08);
+
+      --text: #cbd5e1;
+      --title: #f8fafc;
+      --muted: #94a3b8; /* Melhorado para maior contraste/acessibilidade */
+
+      --accent: #00e5ff;
+      --accent-soft: rgba(0,229,255,0.08);
+
+      --shadow: 0 20px 50px rgba(0,0,0,0.45);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:"Inter",sans-serif;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+      radial-gradient(circle at top right,
+      rgba(0,229,255,0.08),
+      transparent 30%);
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .mono{
+      font-family:"JetBrains Mono",monospace;
+    }
+
+    .container{
+      width:100%;
+      max-width:1150px;
+      margin:auto;
+      padding:0 24px;
+    }
+
+    /* HEADER */
+    header{
+      position:fixed;
+      top:0;
+      width:100%;
+      z-index:100;
+      backdrop-filter:blur(12px);
+      background:rgba(5,8,22,0.85);
+      border-bottom:1px solid rgba(255,255,255,0.04);
+    }
+
+    nav{
+      height:80px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .logo{
+      color:var(--title);
+      text-decoration:none;
+      font-weight:700;
+      font-size:1rem;
+    }
+
+    .logo span{
+      color:var(--accent);
+    }
+
+    .nav-links{
+      display:flex;
+      gap:28px;
+      align-items:center;
+      list-style:none;
+    }
+
+    .nav-links a{
+      color:var(--muted);
+      text-decoration:none;
+      transition:.3s;
+      font-size:.95rem;
+    }
+
+    .nav-links a:hover{
+      color:var(--accent);
+    }
+
+    .lang-switch{
+      display:flex;
+      gap:10px;
+      margin-left:10px;
+    }
+
+    .lang-btn{
+      background:none;
+      border:none;
+      color:var(--muted);
+      cursor:pointer;
+      font-family:"JetBrains Mono",monospace;
+      transition:.3s;
+      padding:4px 8px;
+    }
+
+    .lang-btn.active{
+      color:var(--accent);
+      font-weight: bold;
+    }
+
+    /* HERO */
+    .hero{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      align-items:center;
+      gap:60px;
+      padding-top:120px;
+      padding-bottom: 60px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 16px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      border:1px solid rgba(0,229,255,.15);
+      color:var(--accent);
+      margin-bottom:28px;
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 10px var(--accent);
+      animation:pulse 2s infinite;
+    }
+
+    @keyframes pulse{
+      0%,100%{opacity:.4;}
+      50%{opacity:1;}
+    }
+
+    h1{
+      font-size:4rem;
+      line-height:1.05;
+      color:var(--title);
+      margin-bottom:22px;
+      letter-spacing:-2px;
+    }
+
+    .hero-subtitle{
+      font-size:1.3rem;
+      color:#94a3b8;
+      margin-bottom:24px;
+      max-width:650px;
+    }
+
+    .hero-description{
+      max-width:620px;
+      margin-bottom:40px;
+      line-height:1.8;
+    }
+
+    .hero-buttons{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:14px 24px;
+      border-radius:14px;
+      text-decoration:none;
+      transition:.3s;
+      font-weight:600;
+    }
+
+    .btn-primary{
+      background:var(--accent);
+      color:#001018;
+      box-shadow:0 10px 30px rgba(0,229,255,.2);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-3px);
+      background:white;
+      box-shadow: 0 10px 30px rgba(255,255,255,.2);
+    }
+
+    .btn-secondary{
+      border:1px solid var(--border);
+      color:var(--title);
+      background:rgba(255,255,255,.02);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-3px);
+      border-color:var(--accent);
+      background:rgba(0,229,255,.05);
+    }
+
+    /* INTERACTIVE PANEL */
+    .interactive-panel{
+      background:linear-gradient(
+      180deg,
+      rgba(15,23,42,.85),
+      rgba(2,6,23,.95));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:24px;
+      padding:28px;
+      position:relative;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .interactive-panel::before{
+      content:"";
+      position:absolute;
+      width:200px;
+      height:200px;
+      background:rgba(0,229,255,.08);
+      filter:blur(60px);
+      top:-60px;
+      right:-60px;
+    }
+
+    .panel-top{
+      display:flex;
+      gap:8px;
+      margin-bottom:25px;
+    }
+
+    .circle{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+    }
+
+    .red{background:#ef4444;}
+    .yellow{background:#facc15;}
+    .green{background:#22c55e;}
+
+    .typing{
+      color:#a5f3fc;
+      line-height:2;
+      font-size:.92rem;
+    }
+
+    .typing span{
+      color:#64748b;
+    }
+
+    .system-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-top:30px;
+    }
+
+    .system-card{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+      padding:18px;
+      border-radius:16px;
+      transition:.3s;
+    }
+
+    .system-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(0,229,255,.25);
+    }
+
+    .system-card h4{
+      color:var(--accent);
+      margin-bottom:10px;
+      font-size:.9rem;
+    }
+
+    .system-card p{
+      font-size:.88rem;
+      color:#94a3b8;
+    }
+
+    /* SECTIONS */
+    section{
+      padding:120px 0;
+    }
+
+    .section-title{
+      font-size:2rem;
+      color:var(--title);
+      margin-bottom:60px;
+    }
+
+    .section-title span{
+      color:var(--accent);
+    }
+
+    /* ABOUT */
+    .about-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:30px;
+    }
+
+    .card{
+      background:
+      linear-gradient(
+      180deg,
+      rgba(15,23,42,.85),
+      rgba(2,6,23,.95));
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:24px;
+      padding:35px;
+      box-shadow:var(--shadow);
+    }
+
+    .card p{
+      margin-bottom:20px;
+      line-height:1.8;
+    }
+
+    .skills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:20px;
+    }
+
+    .skill{
+      padding:10px 16px;
+      border-radius:12px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+      transition:.3s;
+    }
+
+    .skill:hover{
+      border-color:var(--accent);
+      transform:translateY(-2px);
+    }
+
+    /* PROJECTS */
+    .featured{
+      background:
+      linear-gradient(
+      180deg,
+      rgba(15,23,42,.85),
+      rgba(2,6,23,.95));
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:28px;
+      padding:45px;
+      margin-bottom:35px;
+      box-shadow:var(--shadow);
+    }
+
+    .featured h3{
+      color:var(--title);
+      font-size:2rem;
+      margin-bottom:20px;
+    }
+
+    .featured p{
+      max-width:700px;
+      margin-bottom:30px;
+      line-height:1.8;
+    }
+
+    .metrics{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-top:35px;
+    }
+
+    .metric{
+      flex:1;
+      min-width:180px;
+      padding:20px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .metric h4{
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+
+    .projects-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:24px;
+    }
+
+    .project-card{
+      background:
+      linear-gradient(
+      180deg,
+      rgba(15,23,42,.85),
+      rgba(2,6,23,.95));
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:24px;
+      padding:30px;
+      text-decoration:none;
+      color:inherit;
+      transition:.3s;
+    }
+
+    .project-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(0,229,255,.25);
+      box-shadow:0 20px 40px rgba(0,0,0,.4);
+    }
+
+    .project-card h4{
+      color:var(--title);
+      margin-bottom:16px;
+      font-size:1.2rem;
+    }
+
+    .project-card p{
+      margin-bottom:20px;
+      line-height:1.7;
+      color:#94a3b8;
+    }
+
+    .project-tech{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      color:var(--accent);
+      font-size:.9rem;
+    }
+
+    /* CONTACT */
+    .contact{
+      text-align:center;
+    }
+
+    .contact p{
+      max-width:700px;
+      margin:0 auto 40px auto;
+      line-height:1.8;
+    }
+
+    .socials{
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .socials a{
+      padding:15px 22px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.05);
+      text-decoration:none;
+      color:var(--title);
+      transition:.3s;
+    }
+
+    .socials a:hover{
+      border-color:var(--accent);
+      background:rgba(0,229,255,.05);
+      transform:translateY(-3px);
+    }
+
+    footer{
+      padding:40px 0;
+      text-align:center;
+      color:var(--muted);
+      border-top:1px solid rgba(255,255,255,.04);
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:950px){
+      .hero,
+      .about-grid{
+        grid-template-columns:1fr;
+      }
+
+      h1{
+        font-size:3rem;
+      }
+
+      /* Ajustado para não quebrar a navegação mobile, mantendo o switch de idiomas visível */
+      .nav-links li:not(.lang-switch) {
+        display: none;
+      }
+
+      .system-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <nav>
+        <a href="#" class="logo mono">
+          <span>_</span>RAMON.LEANDRO
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="#about" class="lang" data-en="About" data-pt="Sobre">About</a></li>
+          <li><a href="#projects" class="lang" data-en="Projects" data-pt="Projetos">Projects</a></li>
+          <li><a href="#contact" class="lang" data-en="Contact" data-pt="Contato">Contact</a></li>
+          
+          <li class="lang-switch">
+            <button class="lang-btn active" id="btn-en" aria-label="Change language to English">EN</button>
+            <button class="lang-btn" id="btn-pt" aria-label="Alterar idioma para Português">PT</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="container hero">
+    <div>
+      <div class="badge mono">
+        <div class="dot"></div>
+        <span class="lang" data-en="Available for opportunities" data-pt="Disponível para oportunidades">Available for opportunities</span>
+      </div>
+
+      <h1>
+        Backend Developer<br/>
+        & Infrastructure Focused
+      </h1>
+
+      <p class="hero-subtitle lang" data-en="Building scalable APIs, automations and infrastructure tools." data-pt="Construindo APIs escaláveis, automações e ferramentas de infraestrutura.">
+        Building scalable APIs, automations and infrastructure tools.
+      </p>
+
+      <p class="hero-description lang" data-en="Developer from Brazil with a strong foundation in Computer Networking and Backend Development. Focused on Python, SQL, infrastructure fundamentals and modern backend architecture." data-pt="Desenvolvedor do Brasil com uma forte base em Redes de Computadores e Desenvolvimento Backend. Focado em Python, SQL, fundamentos de infraestrutura e arquitetura backend moderna.">
+        Developer from Brazil with a strong foundation in Computer Networking and Backend Development. Focused on Python, SQL, infrastructure fundamentals and modern backend architecture.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#projects" class="btn btn-primary lang" data-en="View Projects" data-pt="Ver Projetos">View Projects</a>
+        <a href="#contact" class="btn btn-secondary lang" data-en="Contact Me" data-pt="Entrar em Contato">Contact Me</a>
+      </div>
+    </div>
+
+    <div class="interactive-panel mono">
+      <div class="panel-top">
+        <div class="circle red"></div>
+        <div class="circle yellow"></div>
+        <div class="circle green"></div>
+      </div>
+
+      <div class="typing">
+        <div><span>$</span> whoami</div>
+        <div>Ramon Leandro</div>
+        <br/>
+        <div><span>$</span> current_focus</div>
+        <div>Backend Development</div>
+        <div>Infrastructure</div>
+        <div>DevOps Learning</div>
+        <br/>
+        <div><span>$</span> stack --main</div>
+        <div>Python • SQL • Docker • Go</div>
+        <br/>
+        <div><span>$</span> status</div>
+        <div style="color:#00e5ff;">System operational</div>
+      </div>
+
+      <div class="system-grid">
+        <div class="system-card">
+          <h4>Backend</h4>
+          <p>REST APIs, architecture and scalable systems.</p>
+        </div>
+        <div class="system-card">
+          <h4>Infrastructure</h4>
+          <p>Networking, Docker and deployment fundamentals.</p>
+        </div>
+        <div class="system-card">
+          <h4>DevOps</h4>
+          <p>Learning automation, observability and CI/CD.</p>
+        </div>
+        <div class="system-card">
+          <h4>Problem Solving</h4>
+          <p>Focused on performance and clean architecture.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <h2 class="section-title">
+        <span>01.</span>
+        <span class="lang" data-en="About" data-pt="Sobre">About</span>
+      </h2>
+
+      <div class="about-grid">
+        <div class="card">
+          <p class="lang" data-en="Hello! I'm Ramon, a developer from Brazil with a solid background in Computer Networking and currently pursuing a degree in Analysis and Systems Development." data-pt="Olá! Sou Ramon, um desenvolvedor do Brasil com uma sólida base em Redes de Computadores e atualmente cursando Análise e Desenvolvimento de Sistemas.">
+            Hello! I'm Ramon, a developer from Brazil with a solid background in Computer Networking and currently pursuing a degree in Analysis and Systems Development.
+          </p>
+          <p class="lang" data-en="My main focus is Backend Development with Python and SQL. Thanks to my networking background, I have a deep understanding of protocols, DNS, security and infrastructure fundamentals." data-pt="Meu principal foco é Desenvolvimento Backend com Python e SQL. Graças à minha base em redes, possuo um bom entendimento de protocolos, DNS, segurança e fundamentos de infraestrutura.">
+            My main focus is Backend Development with Python and SQL. Thanks to my networking background, I have a deep understanding of protocols, DNS, security and infrastructure fundamentals.
+          </p>
+          <p class="lang" data-en="Currently learning more about DevOps, observability and scalable backend systems." data-pt="Atualmente aprendendo mais sobre DevOps, observabilidade e sistemas backend escaláveis.">
+            Currently learning more about DevOps, observability and scalable backend systems.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:20px;color:var(--title);">Tech Stack</h3>
+          <div class="skills">
+            <div class="skill">Python</div>
+            <div class="skill">SQL</div>
+            <div class="skill">Docker</div>
+            <div class="skill">Linux</div>
+            <div class="skill">Go</div>
+            <div class="skill">Rust</div>
+            <div class="skill">Kubernetes</div>
+            <div class="skill">TypeScript</div>
+            <div class="skill">JavaScript</div>
+            <div class="skill">Git</div>
+            <div class="skill">GitHub</div>
+            <div class="skill">VS Code</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <h2 class="section-title">
+        <span>02.</span>
+        <span class="lang" data-en="Projects" data-pt="Projetos">Projects</span>
+      </h2>
+
+      <div class="featured">
+        <h3>network-metric-collector</h3>
+        <p class="lang" data-en="Monitoring tool built in Go that checks APIs in real time, collects Prometheus metrics and provides Grafana dashboards for latency and availability analysis." data-pt="Ferramenta de monitoramento desenvolvida em Go que verifica APIs em tempo real, coleta métricas Prometheus e fornece dashboards Grafana para análise de latência e disponibilidade.">
+          Monitoring tool built in Go that checks APIs in real time, collects Prometheus metrics and provides Grafana dashboards for latency and availability analysis.
+        </p>
+        <a href="https://github.com/Ramon-Leandro/network-metric-collector" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          GitHub ↗
+        </a>
+
+        <div class="metrics">
+          <div class="metric">
+            <h4>Stack</h4>
+            <p>Go • Docker • Prometheus • Grafana</p>
+          </div>
+          <div class="metric">
+            <h4>Focus</h4>
+            <p>Monitoring & Infrastructure</p>
+          </div>
+          <div class="metric">
+            <h4>Architecture</h4>
+            <p>Production-style backend environment</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="projects-grid">
+        <a href="https://github.com/Ramon-Leandro/Library_Management_API" target="_blank" rel="noopener noreferrer" class="project-card">
+          <h4>Library Management API</h4>
+          <p>REST API focused on organization, validation and backend architecture.</p>
+          <div class="project-tech">
+            <span>Python</span>
+            <span>REST</span>
+            <span>SQL</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/Ramon-Leandro/Dashboard-de-Clima" target="_blank" rel="noopener noreferrer" class="project-card">
+          <h4>Weather Dashboard</h4>
+          <p>Real-time weather dashboard using APIs and SQL persistence.</p>
+          <div class="project-tech">
+            <span>Python</span>
+            <span>SQL</span>
+            <span>Frontend</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/EmanoelLimaaa/Crawler" target="_blank" rel="noopener noreferrer" class="project-card">
+          <h4>Rust Search Crawler</h4>
+          <p>Hybrid search engine using Rust for performance and FastAPI for backend communication.</p>
+          <div class="project-tech">
+            <span>Rust</span>
+            <span>Python</span>
+            <span>FastAPI</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container contact">
+      <h2 class="section-title">
+        <span>03.</span>
+        <span class="lang" data-en="Contact" data-pt="Contato">Contact</span>
+      </h2>
+
+      <p class="lang" data-en="Currently open for opportunities, freelance projects and collaborations related to backend development and infrastructure." data-pt="Atualmente aberto para oportunidades, freelas e colaborações relacionadas a desenvolvimento backend e infraestrutura.">
+        Currently open for opportunities, freelance projects and collaborations related to backend development and infrastructure.
+      </p>
+
+      <div class="socials">
+        <a href="mailto:ramonsilvaleandro150@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/ramon-da-silva-leandro/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://github.com/Ramon-Leandro" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p class="mono">Ramon Leandro © 2026</p>
+    </div>
+  </style>
+
+  <script>
+    const btnEn = document.getElementById("btn-en");
+    const btnPt = document.getElementById("btn-pt");
+
+    btnEn.addEventListener("click", () => setLanguage("en"));
+    btnPt.addEventListener("click", () => setLanguage("pt"));
+
+    function setLanguage(lang){
+      // Atualiza os elementos de texto
+      document.querySelectorAll(".lang").forEach(el => {
+        el.innerHTML = el.getAttribute(`data-${lang}`);
+      });
+
+      // Melhora a acessibilidade mudando a tag lang do html
+      document.documentElement.lang = lang;
+
+      // Guarda a preferência do usuário no navegador (Local Storage)
+      localStorage.setItem("preferred-lang", lang);
+
+      if(lang === "en"){
+        btnEn.classList.add("active");
+        btnPt.classList.remove("active");
+      } else {
+        btnPt.classList.add("active");
+        btnEn.classList.remove("active");
+      }
+    }
+
+    // Inicialização automática baseada na escolha anterior do usuário
+    const savedLang = localStorage.getItem("preferred-lang") || "en";
+    setLanguage(savedLang);
+  </script>
+</body>
+</html>
